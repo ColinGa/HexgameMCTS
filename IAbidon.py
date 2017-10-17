@@ -4,15 +4,17 @@ class Player:
 
     def __init__(self):
         random.seed()
+        self.pos_to_play = [random.randint(0,10), random.randint(0,10)]
+
 
     def play(self, board, joueur):
         to_play = heuristique(board)
         return to_play
 
     def random(self, board):
-        while board[pos_to_play[0]][pos_to_play[1]] != 0:
-            pos_to_play = [random.randint(0,10), random.randint(0,10)]
-        return pos_to_play
+        while board[self.pos_to_play[0]][self.pos_to_play[1]] != 0:
+            self.pos_to_play = [random.randint(0,10), random.randint(0,10)]
+        return self.pos_to_play
     
 
 
