@@ -3,12 +3,13 @@ POINTSD2 = 10
 POINTTRIANGLE = 15
 POINTSBLOCK = 15
 
-tableau = []
-joueur = 1
+tableau = [] #plateau de jeu
+joueur = 1 #id du joueur
 for i in range(11):
     tableau.append([0] * 11)
 
-coupsDispo = []
+coupsDispo = [] #tableau des cases vides
+tableauValue = [] #tableau indiquand les valeurs pour chaque coup
 
 for x,y in coupsDispo:
     value = 0
@@ -16,6 +17,7 @@ for x,y in coupsDispo:
     value +=  nbAdjacents * POINTSADJACENTS
     if nbAdjacents == 3 and triangle(x,y):
         value += POINTTRIANGLE
+    tableauValue.append(x,y,value)
 
 
 
@@ -35,7 +37,7 @@ def nbAdjacentsEnemy(x,y):
     return nb
 
 def triangle(x,y):
-    if x in range(1,9) and y in range(1,9):
+    if x in range(1,10) and y in range(1,10):
         if (tableau[x-1][y+1] == joueur and tableau[x][y-1] == joueur and tableau[x+1][y] == joueur)\
         or (tableau[x-1][y] == joueur and tableau[x][y+1] == joueur and tableau[x+1][y-1] == joueur):
             return true
@@ -46,6 +48,6 @@ def opposite(x,y):
     pass
 
 def isLegal(x,y):
-    if x in range(0,10) and y in range(0,10):
+    if x in range(0,11) and y in range(0,11):
         return true
     else : return false
