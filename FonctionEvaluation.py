@@ -36,10 +36,14 @@ def nbAdjacentsEnemy(x,y):
 
 def triangle(x,y):
     if x in range(1,9) and y in range(1,9):
-        if (tableau[x-1][y+1] == Joueur and tableau[x][y-1] == joueur and tableau[x+1][y] == joueur)\
-        or (tableau[x-1][y] == Joueur and tableau[x][y+1] == joueur and tableau[x+1][y-1] == joueur):
+        if (tableau[x-1][y+1] == joueur and tableau[x][y-1] == joueur and tableau[x+1][y] == joueur)\
+        or (tableau[x-1][y] == joueur and tableau[x][y+1] == joueur and tableau[x+1][y-1] == joueur):
             return true
-        else : return false
+    else : return false
+
+def opposite(x,y):
+    #todo
+    pass
 
 def isLegal(x,y):
     if x in range(0,10) and y in range(0,10):
