@@ -1,28 +1,36 @@
-import numpy as np
 from Mcts_hex import *
+from hexgame import *
+
 
 class Board(object):
-
-    def start(self):
-        # Returns a representation of the starting state of the game.
-        self.plateau = np.zeros((11, 11), int)
+    def __init__(self):
+        self.plateau = []
+        self.nextplateau = []
+        for i in range (11):
+            self.plateau.append([0]*11)
+            self.nextplateau.append([0] * 11)
+        self.legalMoves = []
         pass
 
-    def next_state(self, state, play):
+    def get_plateau(self):
+        # Returns a representation of the starting state of the game.
+        self.plateau = Game.board
+        pass
+
+    def next_state(self):
         # Takes the game state, and the move to be applied.
         # Returns the new game state.
-
+        # self.nextplateau
         pass
 
-    def legal_plays(self, state_history):
+    def legal_plays(self):
         # Takes a sequence of game states representing the full
         # game history, and returns the full list of moves that
         # are legal plays for the current player.
-        pass
+        self.get_plateau()
 
-    def winner(self, state_history):
-        # Takes a sequence of game states representing the full
-        # game history.  If the game is now won, return the player
-        # number.  If the game is still ongoing, return zero.  If
-        # the game is tied, return a different distinct value, e.g. -1.
+        for i, j in range(0, 10):
+            if self.plateau[i][j] == 0:
+                self.legalMoves.append([i, j])
+        return self.legalMoves
         pass
