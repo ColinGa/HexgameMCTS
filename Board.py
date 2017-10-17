@@ -1,4 +1,3 @@
-from Mcts_hex import *
 from hexgame import *
 
 
@@ -6,7 +5,7 @@ class Board(object):
     def __init__(self):
         self.plateau = []
         self.nextplateau = []
-        for i in range (11):
+        for i in range(11):
             self.plateau.append([0]*11)
             self.nextplateau.append([0] * 11)
         self.legalMoves = []
@@ -17,10 +16,12 @@ class Board(object):
         self.plateau = Game.board
         pass
 
-    def next_state(self):
+    def next_state(self, pos):
         # Takes the game state, and the move to be applied.
         # Returns the new game state.
-        # self.nextplateau
+        posx, posy = pos
+        self.nextplateau = self.plateau
+        self.nextplateau[posx][posy] = 1
         pass
 
     def legal_plays(self):
