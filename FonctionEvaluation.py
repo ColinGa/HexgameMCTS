@@ -1,25 +1,30 @@
-POINTSADJACENTS = 5
-POINTSD2 = 10
-POINTTRIANGLE = 15
-POINTSOPPOSITE = 15
 
 def fonctionEvaluation(x,y,plateau,joueur):
-    value = 0
+    value = 10 #min : 1    max : 50
 
     nbAdjacentsAlly = nbAdjacents(x,y,plateau,joueur)
     value += nbAdjacentsAlly * 5
     if nbAdjacentsAlly == 3 and triangle(x,y,plateau,joueur):
         value += 10
     if nbAdjacentsAlly == 2 and opposite(x,y,plateau,joueur):
-        value += 10
+        value += 8
+    if already2Near(x,y,plateu,joueur):
+        value -= 20
 
     nbAdjacentsEnemy = nbAdjacents(x,y,tableau,-joueur)
     if nbAdjacentsEnemy == 2 and opposite(x,y,plateau,-joueur):
-        value += 15
+        value += 11
     if nbAdjacentsEnemy == 3 and opposite(x, y , plateau , -joueur):
         value += 15
 
-    return value
+    if (x == 0 or x == 10) and nearBorderX(x,y,plateau,joueur):
+        value += 12
+
+    if (y == 0 or y == 10) and nearBorderY(x,y,plateau,joueur):
+        value += 12
+
+    if value < 1: return 1
+    else : return value
 
 def nbAdjacents(x,y,tableau,joueur):
     nb = 0
@@ -36,14 +41,67 @@ def triangle(x,y,tableau,joueur):
     else : return false
 
 def opposite(x,y,tableau,joueur):
-    if x in  range(1,10) and y in range(1,10):
+    if x in range(1,10) and y in range(1,10):
         if (tableau[x][y-1] == joueur and tableau[x][y+1] == joueur)\
-        or (tableau[x-1][y] == joueur and tableau[x+1][y] == joueur) \
+        or (tableau[x-1][y] == joueur and tableau[x+1][y] == joueur)\
         or (tableau[x-1][y+1] == joueur and tableau[x+1][y-1] == joueur):
             return true
+    else : return false
 
+def already2Near(x,y,tableau,joueur):
+    if x in range(1,10) and y in range(1,10):
+        coups = coupsAutour(x,y,tableau)
+        for i in range(5):
+            if coups[i] == coups[i+1] and coup[i] == joueur:
+                return true
+        if coups[5] == coups[0] and coups[0] == joueur:
+            return true
+    return false
 
 def isLegal(x,y):
     if x in range(0,11) and y in range(0,11):
         return true
     else : return false
+
+def coupsAutour(x,y,tableau):
+    coups = []
+    if x in range(1, 10) and y in range(1, 10):
+        coups.append(tableau[x][y-1])
+        coups.append(tableau[x+1][y-1])
+        coups.append(tableau[x+1][y])
+        coups.append(tableau[x][y+1])
+        coups.append(tableau[x-1][y+1])
+        coups.append(tableau[x-1][y])
+    return coups
+
+def nearBorderX(x,y,tableau,joueur):
+    if x == 0:
+        if tableau[1][y] == joueur:
+            return true
+
+        if tableau[1][y-1] != null and tableau[1][y-1] == joueur :
+            return true
+
+    if x == 10:
+        if tableau[9][y] == joueur:
+            return true
+
+        if tableau[9][y+1] != null and tableau[9][y+1] == joueur :
+            return true
+    return false
+
+def nearBorderY(x,y,tableau,joueur):
+    if y == 0:
+        if tableau[x][1] == joueur:
+            return true
+
+        if y<10 and tableau[x-1][1] == joueur :
+            return true
+
+    if y == 10:
+        if tableau[x][9] == joueur:
+            return true
+
+        if x<10 and tableau[x+1][y+1] == joueur :
+            return true
+    return false
