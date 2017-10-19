@@ -1,131 +1,133 @@
-from math import log, sqrt
 from __future__ import division
+from math import log, sqrt
 from random import choice
 import datetime
+
 
 class MonteCarlo(object):
     def __init__(self, board, **kwargs):
         # Takes an instance of a Board and optionally some keyword
         # arguments.  Initializes the list of game states and the
         # statistics tables.
-		self.board = board #A CHANGER
+        self.board = board
         self.states = []
-		seconds = kwargs.get('time', 30)
+        seconds = kwargs.get('time', 30)
         self.calculation_time = datetime.timedelta(seconds=seconds)
-		self.max_moves = kwargs.get('max_moves', 100)
-		self.wins = {}
+        self.max_moves = kwargs.get('max_moves', 100)
+        self.wins = {}
         self.plays = {}
-		self.C = kwargs.get('C', 1.4) #A QUOI CA SERT ?
-        pass
+        self.C = kwargs.get('C', 1.4)  # A QUOI CA SERT ?
 
-    def update(self, state):
-        # Takes a game state, and appends it to the history.
-		self.states.append(state)
-        pass
 
-    def get_play(self):
-        # Causes the AI to calculate the best move from the
-        # current game state and return it.
-		self.max_depth = 0
-        state = self.states[-1]
-        player = self.board.current_player(state) #A CHANGER
-        legal = self.board.legal_plays(self.states[:]) #A CHANGER
+def update(self, state):
+    # Takes a game state, and appends it to the history.
+    self.states.append(state)
 
-        # Bail out early if there is no real choice to be made.
-        if not legal:
-            return
-        if len(legal) == 1:
-            return legal[0]
 
-        games = 0
-        begin = datetime.datetime.utcnow()
-        while datetime.datetime.utcnow() - begin < self.calculation_time:
-            self.run_simulation()
-            games += 1
+def get_play(self):
+    # Causes the AI to calculate the best move from the
+    # current game state and return it.
+    self.max_depth = 0
+    state = self.states[-1]
+    player = self.board.current_player(state)  # A CHANGER
+    legal = self.board.legal_plays(self.states[:])  # A CHANGER
 
-        moves_states = [(p, self.board.next_state(state, p)) for p in legal] #A CHANGER
+    # Bail out early if there is no real choice to be made.
+    if not legal:
+        return
+    if len(legal) == 1:
+        return legal[0]
 
-        # Display the number of calls of `run_simulation` and the
-        # time elapsed.
-        print games, datetime.datetime.utcnow() - begin
+    games = 0
+    begin = datetime.datetime.utcnow()
+    while datetime.datetime.utcnow() - begin < self.calculation_time:
+        self.run_simulation()
+        games += 1
 
-        # Pick the move with the highest percentage of wins.
-        percent_wins, move = max(
-            (self.wins.get((player, S), 0) /
-             self.plays.get((player, S), 1),
-             p)
-            for p, S in moves_states
-        )
+    moves_states = [(p, self.board.next_state(state, p)) for p in legal]  # A CHANGER
 
-        # Display the stats for each possible play.
-        for x in sorted(
+    # Display the number of calls of `run_simulation` and the
+    # time elapsed.
+    print(games, datetime.datetime.utcnow() - begin)
+
+    # Pick the move with the highest percentage of wins.
+    percent_wins, move = max(
+        (self.wins.get((player, S), 0) /
+         self.plays.get((player, S), 1),
+         p)
+        for p, S in moves_states
+    )
+
+    # Display the stats for each possible play.
+    for x in sorted(
             ((100 * self.wins.get((player, S), 0) /
-              self.plays.get((player, S), 1),
+                  self.plays.get((player, S), 1),
               self.wins.get((player, S), 0),
               self.plays.get((player, S), 0), p)
              for p, S in moves_states),
             reverse=True
-        ):
-            print "{3}: {0:.2f}% ({1} / {2})".format(*x)
+    ):
+        print("{3}: {0:.2f}% ({1} / {2})".format(*x))
 
-        print "Maximum depth searched:", self.max_depth
+    print("Maximum depth searched:", self.max_depth)
 
-        return move
-        pass
+    return move
 
-    def run_simulation(self):
-        # Plays out a "random" game from the current position,
-        # then updates the statistics tables with the result.
-		 # A bit of an optimization here, so we have a local
-        # variable lookup instead of an attribute access each loop.
-        plays, wins = self.plays, self.wins
 
-        visited_states = set()
-        states_copy = self.states[:]
-        state = states_copy[-1]
-        player = self.board.current_player(state) #A CHANGER
+def run_simulation(self):
+    # Plays out a "random" game from the current position,
+    # then updates the statistics tables with the result.
+    # A bit of an optimization here, so we have a local
+    # variable lookup instead of an attribute access each loop.
+    winner = False
 
-        expand = True
-        for t in xrange(1, self.max_moves + 1):
-            legal = self.board.legal_plays(states_copy) #A CHANGER
-            moves_states = [(p, self.board.next_state(state, p)) for p in legal]
+    plays, wins = self.plays, self.wins
 
-            if all(plays.get((player, S)) for p, S in moves_states):
-                # If we have stats on all of the legal moves here, use them.
-                log_total = log(
-                    sum(plays[(player, S)] for p, S in moves_states))
-                value, move, state = max(
-                    ((wins[(player, S)] / plays[(player, S)]) +
-                     self.C * sqrt(log_total / plays[(player, S)]), p, S)
-                    for p, S in moves_states
-                )
-            else:
-                # Otherwise, just make an arbitrary decision.
-                move, state = choice(moves_states)
+    visited_states = set()
+    states_copy = self.states[:]
+    state = states_copy[-1]
+    player = self.board.current_player(state)  # A CHANGER
 
-            states_copy.append(state)
+    expand = True
+    for t in range(1, self.max_moves + 1):
+        legal = self.board.legal_plays(states_copy)  # A CHANGER
+        moves_states = [(p, self.board.next_state(state, p)) for p in legal]
 
-            # `player` here and below refers to the player
-            # who moved into that particular state.
-            if expand and (player, state) not in plays:
-                expand = False
-                plays[(player, state)] = 0
-                wins[(player, state)] = 0
-                if t > self.max_depth:
-                    self.max_depth = t
+        if all(plays.get((player, S)) for p, S in moves_states):
+            # If we have stats on all of the legal moves here, use them.
+            log_total = log(
+                sum(plays[(player, S)] for p, S in moves_states))
+            value, move, state = max(
+                ((wins[(player, S)] / plays[(player, S)]) +
+                 self.C * sqrt(log_total / plays[(player, S)]), p, S)
+                for p, S in moves_states
+            )
+        else:
+            # Otherwise, just make an arbitrary decision.
+            move, state = choice(moves_states)
 
-            visited_states.add((player, state))
+        states_copy.append(state)
 
-            player = self.board.current_player(state) #A CHANGER
-            winner = self.board.winner(states_copy) #A CHANGER
-            if winner: #A CHANGER
-                break
+        # `player` here and below refers to the player
+        # who moved into that particular state.
+        if expand and (player, state) not in plays:
+            expand = False
+            plays[(player, state)] = 0
+            wins[(player, state)] = 0
+            if t > self.max_depth:
+                self.max_depth = t
 
-		#Rétropropagation
-        for player, state in visited_states:
-            if (player, state) not in plays:
-                continue
-            plays[(player, state)] += 1
-            if player == winner:
-                wins[(player, state)] += 1
-        pass
+        visited_states.add((player, state))
+
+        player = self.board.current_player(state)  # A CHANGER
+        winner = self.board.winner(states_copy)  # A CHANGER
+        if winner:  # A CHANGER
+            break
+
+            # Rétropropagation
+    for player, state in visited_states:
+        if (player, state) not in plays:
+            continue
+        plays[(player, state)] += 1
+        if player == winner:
+            wins[(player, state)] += 1
