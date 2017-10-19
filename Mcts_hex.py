@@ -96,7 +96,7 @@ def run_simulation(self):
         if all(plays.get((player, S)) for p, S in moves_states):
             # If we have stats on all of the legal moves here, use them.
             log_total = log(
-                sum(plays[(player, S)] for p, S in moves_states))²²
+                sum(plays[(player, S)] for p, S in moves_states))
             value, move, state = max(
                 ((wins[(player, S)] / plays[(player, S)]) +
                  self.C * sqrt(log_total / plays[(player, S)]), p, S)
