@@ -11,9 +11,11 @@ class Noeud(object):
         self.GetChildren()
 
     def Growth(self):
+        #TODO
         pass
 
     def GetChildren(self):
+        #TODO
         pass
 
     def GetFullTree(self):
