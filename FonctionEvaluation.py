@@ -17,10 +17,11 @@ for x,y in coupsDispo:
     value +=  nbAdjacents * POINTSADJACENTS
     if nbAdjacents == 3 and triangle(x,y):
         value += POINTTRIANGLE
-    tableauValue.append(x,y,value)
+    tableauValue.append((x,y,value))
 
-
-
+def fonctionEvaluation(x,y,plateau,joueur):
+    #todo
+    pass
 
 def nbAdjacentsAlly(x,y):
     nb = 0
@@ -44,8 +45,12 @@ def triangle(x,y):
     else : return false
 
 def opposite(x,y):
-    #todo
-    pass
+    if x in  range(1,10) and y in range(1,10):
+        if (tableau[x][y-1] == joueur and tableau[x][y+1] == joueur)\
+        or (tableau[x-1][y] == joueur and tableau[x+1][y] == joueur) \
+        or (tableau[x-1][y+1] == joueur and tableau[x+1][y-1] == joueur):
+            return true
+
 
 def isLegal(x,y):
     if x in range(0,11) and y in range(0,11):
