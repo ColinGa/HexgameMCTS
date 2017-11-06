@@ -1,14 +1,21 @@
-Travail à faire pour l'algo MCTS :
+﻿Travail à faire pour l'algo MCTS :
 
- - Créer un joueur bidon
-
- - Trouver une fonction d'évaluation
-
- - Fonction de sauvegarde de l'arbre binaire
  
- - Correction de la classe MCTS
+- Créer un joueur bidon
+
  
- - Créer une classe plateau :
+- Trouver une fonction d'évaluation
+
+ 
+- Fonction de sauvegarde de l'arbre binaire
+ 
+ 
+- Correction de la classe MCTS
+ 
+ 
+- Créer une classe plateau :
+	
 	Paramètre : tableau 2 dimensions (numpy)
+	
 	méthodes : set/get/State ; winner ; next_state ; coups légaux
 	
